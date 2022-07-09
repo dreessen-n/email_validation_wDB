@@ -29,6 +29,12 @@
                 <tr>
                     <td>{{ em['email'] }}</td>
                     <td>{{ em.created_at }}</td>
+                    <td>
+                        <form action="/delete_email", method="POST">
+                            <input type="hidden" name="email_id" value="{{em.id}}">
+                            <button class="btn btn-danger btn-sm px-2 gap-2" type="submit" role="button">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>

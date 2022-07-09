@@ -41,3 +41,13 @@ def display_all():
 # TODO set routes to UPDATE - UPDATE from db in models
 
 # TODO set routes to DELETE - DELETE from db in models
+@app.route('/delete_email', methods=['POST'])
+def remove_email():
+    """Remove email from db"""
+    data = {
+        'email_id': request.form['email_id']
+    }
+    Email.delete_email(data)
+    return redirect('/success')
+
+

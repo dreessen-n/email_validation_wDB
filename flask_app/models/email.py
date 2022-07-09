@@ -15,9 +15,9 @@ EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 class Email:
     def __init__(self, data):
         """Model email"""
-        self.id = data['id'],
-        self.email = data['email'],
-        self.created_at = data['created_at'],
+        self.id = data['id']
+        self.email = data['email']
+        self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
     @classmethod
@@ -29,13 +29,19 @@ class Email:
     @classmethod
     def display_emails(cls):
         """Show all the emails in db"""
-        flash(f"The email address you entered is VALID email address! Thank you!", "success")
         query = "SELECT * FROM emails;"
         emails_from_db = connectToMySQL('email_val_with_db').query_db(query)
         all_emails = []
         for row in emails_from_db:
             all_emails.append(cls(row))
         return all_emails
+
+    @classmethod
+    def delete_email(cls, data):
+        query = "DELETE FROM emails WHERE id=%(email_id)s;"
+        return connectToMySQL('email_val_with_db').query_db(query,data)
+        
+
 
     @staticmethod
     def validate_email(email):
@@ -49,10 +55,14 @@ class Email:
         if len(result) >= 1:
             flash("Email is already used. Please sign in or register with different email.", "danger")
             is_valid = False
+            return is_valid
         # Test whether a field matches the pattern
         if not EMAIL_REGEX.match(email['email']):
             flash("Email is not valid!", "danger")
             is_valid = False
+            return is_valid
+        else:
+            flash(f"The email address you entered: {email['email']} is VALID email address! Thank you!", "success")
         return is_valid
 
 
