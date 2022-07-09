@@ -1,6 +1,7 @@
 # Import mysqlconnection config
 from flask_app.config.mysqlconnection import connectToMySQL
 import re # The regex module
+from flask import flash
 
 """
 Import other models files for access to classes.
@@ -12,7 +13,7 @@ Example: from flask_app.models import ninja
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
 class Email:
-    def __init__(self.data):
+    def __init__(self, data):
         """Model email"""
         self.id = data['id'],
         self.email = data['email'],
@@ -20,9 +21,9 @@ class Email:
         self.updated_at = data['updated_at']
 
     @classmethod
-    def create_email(data):
+    def create_email(cls, data):
         """Add email to db based on info passed from form"""
-        query = "SELECT INTO emails (email) VALUES (%(email)s);"
+        query = "INSERT INTO emails (email) VALUES (%(email)s);"
         return connectToMySQL('email_val_with_db').query_db(query, data)
 
     @classmethod
@@ -30,18 +31,19 @@ class Email:
         """Show all the emails in db"""
         query = "SELECT * FROM emails;"
         emails_from_db = connectToMySQL('email_val_with_db').query_db(query)
-        emails = []
+        all_emails = []
         for em in emails_from_db:
-            emails.append(cls(em))
-        return emails
+            all_emails.append(cls(em))
+        flash(f"The email address you entered is VALID email address! Thank you!", "success")
+        return all_emails
 
     @staticmethod
     def validate_email(email):
         """Validate that the email is in proper form and exist"""
         is_valid = True
         # Test whether a field matches the pattern
-        if not EMAIL_REGEX.match(user['email']):
-            flash("Email is not valid!", "error")
+        if not EMAIL_REGEX.match(email['email']):
+            flash("Email is not valid!", "danger")
             is_valid = False
         return is_valid
 

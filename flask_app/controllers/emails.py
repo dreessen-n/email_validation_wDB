@@ -5,7 +5,7 @@ from flask_app import app
 from flask import Flask, render_template, request, redirect, session, url_for
 
 # Import models class
-from flask_app.models import email
+from flask_app.models.email import Email
 
 # Create the routes
 
@@ -14,7 +14,6 @@ def index():
     """Homepage"""
     return render_template('index.html')
 
-# TODO set routes to CREATE - INSERT into db in models
 @app.route('/create', methods=['POST'])
 def add_email():
     if not Email.validate_email(request.form):
@@ -26,10 +25,15 @@ def add_email():
         'email': request.form['email'],
 }
     # Pass the data dict to create_email method in class
-    email.Email.create_email(data)
+    Email.create_email(data)
     # Redirect to display page
     return redirect('/success')
 
+@app.route('/success')
+def display_all():
+    """Display all the emails in db"""
+    all_emails = Email.display_emails()
+    return render_template('success.html', all_emails= all_emails)
 
 
 # TODO set routes to READ - SELECT from db in models
