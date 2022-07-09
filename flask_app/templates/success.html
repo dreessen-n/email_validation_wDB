@@ -9,7 +9,6 @@
     <title>Email Validation</title>
 </head>
 <body>
-
     <div class="wrapper">
         <div class="container py-5 mb-4 bg-light rounded-3 ">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -28,7 +27,7 @@
                 <tbody>
                 {% for em in all_emails %}
                 <tr>
-                    <td>{{ em.email }}</td>
+                    <td>{{ em['email'] }}</td>
                     <td>{{ em.created_at }}</td>
                 </tr>
                 {% endfor %}
